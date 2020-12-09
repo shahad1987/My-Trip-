@@ -1,0 +1,759 @@
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+class BookedTrips extends JFrame {
+
+    JPanel panel2 = new JPanel();
+
+    BookedTrips() {
+        super("Booked trips");
+        add(new MyPanel());
+    }
+
+    class MyPanel extends JPanel {
+
+        JTabbedPane tabPane = new JTabbedPane();
+
+        public MyPanel() {
+            dpanel panel1 = new dpanel();
+            jpanel panel2 = new jpanel();
+            tabPane.add("Dammam trips", panel1);
+            tabPane.add("Jeddah trips", panel2);
+            tabPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            setLayout(new BorderLayout());
+            add(tabPane, BorderLayout.CENTER);
+
+        }
+
+    }
+
+    class dpanel extends JPanel {
+
+        Frame1 ja = new Frame1();
+        panelf1 pf1 = new panelf1();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet ruseltset = null;
+        String query;
+
+        String[] column = {"Trip number", "Cabin", "hotel", "Tourist place", "guide", "date", "Country"};
+        DefaultTableModel model = new DefaultTableModel();
+        JTable table = new JTable(model);
+        JLabel Labe2, Labe3, Labe4, Labe5, Labe6, Labe7, Label8, Label9, Label10, Label11, Labeli;
+        JTextField t1, t2, t3, t4, t5, t6;
+        JButton b1 = new JButton("Delete");
+        JButton b2 = new JButton("Update");
+        Panel1 panel1 = new Panel1();
+        JPanel panel2 = new JPanel();
+        JPanel panelbox = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(table);
+        JComboBox cabinbox = new JComboBox();
+        JComboBox hotelbox = new JComboBox();
+        JComboBox placebox = new JComboBox();
+        JComboBox guidebox = new JComboBox();
+        JPanel panel3 = new JPanel();
+
+        dpanel() {
+            setLayout(null);
+
+            model.setColumnIdentifiers(column);
+
+            panel1.setBounds(0, 0, 700, 600);
+            add(panel1);
+            pf1.setBackground(new Color(255, 255, 255, 10));
+            pf1.setBounds(0, 310, 300, 200);
+            add(pf1);
+            panel2.setLayout(new GridLayout(3, 2, 10, 2));
+            panel2.setBackground(new Color(100, 9, 60, 10));
+            Labe2 = new JLabel("Cabin");
+            panel2.add(Labe2);
+            t1 = new JTextField(10);
+            panel2.add(t1);
+
+            Labe3 = new JLabel("Hotel");
+            panel2.add(Labe3);
+            t2 = new JTextField(10);
+            panel2.add(t2);
+
+            Labe4 = new JLabel("Tourist Plase");
+            panel2.add(Labe4);
+            t3 = new JTextField(10);
+            panel2.add(t3);
+
+            Labe5 = new JLabel("Tourist Guide");
+            panel2.add(Labe5);
+            t4 = new JTextField(10);
+            panel2.add(t4);
+
+            Labe6 = new JLabel("Date");
+            panel2.add(Labe6);
+            t5 = new JTextField(10);
+            panel2.add(t5);
+
+            panel2.setBounds(0, 10, 600, 70);
+            add(panel2);
+
+            b1.setBounds(550, 180, 80, 30);
+
+            add(b1);
+
+            b2.setBounds(550, 230, 80, 30);
+            b2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    int dialog = JOptionPane.showConfirmDialog(null, "Are you sure to Update the trip?", "", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (dialog == JOptionPane.YES_OPTION) {
+                        int row = table.getSelectedRow();
+                        if (row != -1) {
+                            try {
+                                concted();
+                                String b = (table.getModel().getValueAt(row, 0).toString());
+                                query = "UPDATE trip_info SET cabin=?,hotel=?,place=?,guide=? where id=" + b;
+                                PreparedStatement pstatment = connection.prepareStatement(query);
+                                String ca = cabinbox.getSelectedItem().toString();
+                                pstatment.setString(1, ca);
+                                String ho = hotelbox.getSelectedItem().toString();
+                                pstatment.setString(2, ho);
+                                String pl = placebox.getSelectedItem().toString();
+                                pstatment.setString(3, pl);
+                                String gu = guidebox.getSelectedItem().toString();
+                                pstatment.setString(4, gu);
+                                pstatment.executeUpdate();
+                                model.setRowCount(0);
+                                display_trips();
+                                JOptionPane.showMessageDialog(null, "Update Row");
+
+                            } catch (SQLException sqlEx) {
+                                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Please select row");
+                        }
+
+                    }
+
+                }
+            });
+            add(b2);
+
+            Label8 = new JLabel("Cabin");
+
+            panel3.add(Label8);
+            cabinbox.addItem("Economic");
+            cabinbox.addItem("Tourist");
+            cabinbox.addItem("Business");
+            cabinbox.addItem("First Class");
+            panel3.add(cabinbox);
+            Label9 = new JLabel("Hotel");
+            panel3.add(Label9);
+
+            try {
+                concted();
+                String query = "select * from Hotel";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                ruseltset.absolute(5);
+
+                while (ruseltset.next()) {
+
+                    hotelbox.addItem(ruseltset.getString("Hotel"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+            panel3.add(hotelbox);
+            Label10 = new JLabel("Place");
+
+            panel3.add(Label10);
+            try {
+                concted();
+                String query = "select * from Place";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                for (int i = 1; i <= 4; i++) {
+                    ruseltset.next();
+
+                    placebox.addItem(ruseltset.getString("Place"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+            panel3.add(placebox);
+            Label11 = new JLabel("Tourist guide");
+            panel3.add(Label11);
+            try {
+                concted();
+                String query = "select * from tourist_guide";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                ruseltset.absolute(4);
+
+                while (ruseltset.next()) {
+
+                    guidebox.addItem(ruseltset.getString("Guide_name"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+            panel3.add(guidebox);
+            Label8 = new JLabel("Cabin");
+            panel3.setLayout(new GridLayout(4, 2));
+            panel3.setBounds(300, 320, 200, 150);
+            panel3.setBackground(new Color(100, 9, 60, 10));
+
+            add(panel3);
+
+            table.setPreferredScrollableViewportSize(new Dimension(500, 10));
+
+            scrollPane.setBounds(20, 100, 500, 200);
+            add(scrollPane);
+
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent me) {
+                    int rowIndex = table.getSelectedRow();
+
+                    t1.setText(model.getValueAt(rowIndex, 1).toString());
+                    t2.setText(model.getValueAt(rowIndex, 2).toString());
+                    t3.setText(model.getValueAt(rowIndex, 3).toString());
+                    t4.setText(model.getValueAt(rowIndex, 4).toString());
+                    t5.setText(model.getValueAt(rowIndex, 5).toString());
+                }
+
+            });
+
+            panel1.setBounds(0, 0, 900, 800);
+            add(panel1);
+            display_trips();
+            b1.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    int dialog = JOptionPane.showConfirmDialog(null, "Are you sure to delete the trip?", "", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+                    if (dialog == JOptionPane.YES_OPTION) {
+                        int row = table.getSelectedRow();
+                        if (row != -1) {
+                            try {
+                                concted();
+                                String b = (table.getModel().getValueAt(row, 0).toString());
+                                query = "delete from trip_info where id=" + b;
+                                PreparedStatement pstatment = connection.prepareStatement(query);
+                                pstatment.executeUpdate();
+                                model.setRowCount(0);
+                                display_trips();
+
+                            } catch (SQLException sqlEx) {
+                                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "please select row");
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+        class Panel1 extends JPanel {
+
+            Panel1() {
+                setLayout(null);
+
+            }
+
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon image1 = new ImageIcon(getClass().getResource("background.jpg"));
+                Image a = image1.getImage();
+                g.drawImage(a, 0, 0, this.getSize().width, this.getSize().height, this);
+
+            }
+        }
+
+        public ArrayList<Cust> mytrip() {
+            ArrayList<Cust> mytrip = new ArrayList<>();
+            try {
+                concted();
+
+                String name = ja.t.getText();
+
+                String query = "select * from trip_info where Email=?;";
+                PreparedStatement preparedStmt = connection.prepareStatement(query);
+                preparedStmt.setString(1, name);
+                ruseltset = preparedStmt.executeQuery();
+                ResultSetMetaData t = ruseltset.getMetaData();
+
+                Cust cust;
+                while (ruseltset.next()) {
+                    cust = new Cust(ruseltset.getInt("id"), ruseltset.getString("Email"), ruseltset.getString("cabin"), ruseltset.getString("hotel"), ruseltset.getString("place"), ruseltset.getString("guide"), ruseltset.getString("date"), ruseltset.getString("country"));
+                    mytrip.add(cust);
+
+                }
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(this, sqlEx.getMessage());
+            }
+            return mytrip;
+        }
+
+        public void display_trips() {
+            ArrayList<Cust> list = mytrip();
+
+            Object[] row = new Object[7];
+
+            for (int i = 0; i < list.size(); i++) {
+
+                if (list.get(i).getCountry().equals("Dammam")) {
+                    row[0] = list.get(i).getId();
+                    row[1] = list.get(i).getCabin();
+                    row[2] = list.get(i).getHotel();
+                    row[3] = list.get(i).getPalse();
+                    row[4] = list.get(i).getGuide();
+                    row[5] = list.get(i).getDate();
+                    row[6] = list.get(i).getCountry();
+
+                    model.addRow(row);
+                }
+
+            }
+        }
+
+        public void concted() {
+
+            try {
+                String URL = "jdbc:mysql://localhost:3306/trips";
+                String usernsme = "root";
+                String pass = "1234";
+                String query = "select * from trip_info";
+                connection = DriverManager.getConnection(URL, usernsme, pass);
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }
+
+    class Cust {
+
+        private int id;
+        private String Email, cabin, hotel, palse, guide, date, country;
+
+        public Cust(int id, String Email, String cabin, String hotel, String palse, String guide, String date, String country) {
+            this.id = id;
+            this.Email = Email;
+            this.cabin = cabin;
+            this.hotel = hotel;
+            this.palse = palse;
+            this.guide = guide;
+            this.date = date;
+            this.country = country;
+
+        }
+
+        public String getCountry() {
+            return country;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getEmail() {
+            return Email;
+        }
+
+        public String getCabin() {
+            return cabin;
+        }
+
+        public String getHotel() {
+            return hotel;
+        }
+
+        public String getPalse() {
+            return palse;
+        }
+
+        public String getGuide() {
+            return guide;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+    }
+
+    class jpanel extends JPanel {
+
+        Frame1 ja = new Frame1();
+        panelf pf = new panelf();
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet ruseltset = null;
+        String query;
+
+        String[] column = {"Trip number", "Cabin", "hotel", "Tourist place", "guide", "date", "Country"};
+        DefaultTableModel model = new DefaultTableModel();
+        JTable table = new JTable(model);
+        JLabel Labe2, Labe3, Labe4, Labe5, Labe6, Labe7, Label8, Label9, Label10, Label11, Labeli;
+        JTextField t1, t2, t3, t4, t5, t6;
+        JButton b1 = new JButton("Delete");
+        JButton b2 = new JButton("Update");
+        Panel1 panel1 = new Panel1();
+        JPanel panel2 = new JPanel();
+        JPanel panelbox = new JPanel();
+        JScrollPane scrollPane = new JScrollPane(table);
+        JComboBox cabinbox = new JComboBox();
+        JComboBox hotelbox = new JComboBox();
+        JComboBox placebox = new JComboBox();
+        JComboBox guidebox = new JComboBox();
+        JPanel panel3 = new JPanel();
+
+        jpanel() {
+            setLayout(null);
+
+            model.setColumnIdentifiers(column);
+
+            panel1.setBounds(0, 0, 900, 800);
+            add(panel1);
+            pf.setBackground(new Color(255, 255, 255, 10));
+            pf.setBounds(0, 310, 300, 200);
+            add(pf);
+            panel2.setLayout(new GridLayout(3, 2, 10, 2));
+            panel2.setBackground(new Color(100, 9, 60, 10));
+            Labe2 = new JLabel("Cabin");
+            panel2.add(Labe2);
+            t1 = new JTextField(10);
+            panel2.add(t1);
+
+            Labe3 = new JLabel("Hotel");
+            panel2.add(Labe3);
+            t2 = new JTextField(10);
+            panel2.add(t2);
+
+            Labe4 = new JLabel("Tourist Plase");
+            panel2.add(Labe4);
+            t3 = new JTextField(10);
+            panel2.add(t3);
+
+            Labe5 = new JLabel("Tourist Guide");
+            panel2.add(Labe5);
+            t4 = new JTextField(10);
+            panel2.add(t4);
+
+            Labe6 = new JLabel("Date");
+            panel2.add(Labe6);
+            t5 = new JTextField(10);
+            panel2.add(t5);
+
+            panel2.setBounds(0, 10, 600, 70);
+            add(panel2);
+
+            b1.setBounds(550, 180, 80, 30);
+
+            add(b1);
+
+            b2.setBounds(550, 230, 80, 30);
+            b2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    int dialog = JOptionPane.showConfirmDialog(null, "Are you sure to Update the trip?", "", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (dialog == JOptionPane.YES_OPTION) {
+                        int row = table.getSelectedRow();
+                        if (row != -1) {
+                            try {
+                                concted();
+                                String b = (table.getModel().getValueAt(row, 0).toString());
+                                query = "UPDATE trip_info SET cabin=?,hotel=?,place=?,guide=? where id=" + b;
+                                PreparedStatement pstatment = connection.prepareStatement(query);
+                                String ca = cabinbox.getSelectedItem().toString();
+                                pstatment.setString(1, ca);
+                                String ho = hotelbox.getSelectedItem().toString();
+                                pstatment.setString(2, ho);
+                                String pl = placebox.getSelectedItem().toString();
+                                pstatment.setString(3, pl);
+                                String gu = guidebox.getSelectedItem().toString();
+                                pstatment.setString(4, gu);
+                                pstatment.executeUpdate();
+                                model.setRowCount(0);
+                                display_trips();
+                                JOptionPane.showMessageDialog(null, "Update Row");
+
+                            } catch (SQLException sqlEx) {
+                                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Please select row");
+                        }
+
+                    }
+
+                }
+            });
+            add(b2);
+
+            Label8 = new JLabel("Cabin");
+
+            panel3.add(Label8);
+            cabinbox.addItem("Economic");
+            cabinbox.addItem("Tourist");
+            cabinbox.addItem("Business");
+            cabinbox.addItem("First Class");
+            panel3.add(cabinbox);
+            Label9 = new JLabel("Hotel");
+            panel3.add(Label9);
+
+            try {
+                concted();
+                String query = "select * from Hotel";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                for (int i = 1; i <= 5; i++) {
+                    ruseltset.next();
+
+                    hotelbox.addItem(ruseltset.getString("Hotel"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+
+            panel3.add(hotelbox);
+            Label10 = new JLabel("Place");
+            panel3.add(Label10);
+            try {
+                concted();
+                String query = "select * from place";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                ruseltset.absolute(4);
+
+                while (ruseltset.next()) {
+
+                    placebox.addItem(ruseltset.getString("Place"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+            panel3.add(placebox);
+            Label11 = new JLabel("Tourist guide");
+            panel3.add(Label11);
+            try {
+                concted();
+                String query = "select * from tourist_guide";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+                for (int i = 1; i <= 4; i++) {
+                    ruseltset.next();
+
+                    guidebox.addItem(ruseltset.getString("Guide_name"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+            panel3.add(guidebox);
+            Label8 = new JLabel("Cabin");
+            panel3.setLayout(new GridLayout(4, 2));
+            panel3.setBounds(300, 320, 200, 150);
+            panel3.setBackground(new Color(100, 9, 60, 10));
+
+            add(panel3);
+
+            table.setPreferredScrollableViewportSize(new Dimension(500, 10));
+
+            scrollPane.setBounds(20, 100, 500, 200);
+            add(scrollPane);
+
+            table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent me) {
+                    int rowIndex = table.getSelectedRow();
+
+                    t1.setText(model.getValueAt(rowIndex, 1).toString());
+                    t2.setText(model.getValueAt(rowIndex, 2).toString());
+                    t3.setText(model.getValueAt(rowIndex, 3).toString());
+                    t4.setText(model.getValueAt(rowIndex, 4).toString());
+                    t5.setText(model.getValueAt(rowIndex, 5).toString());
+                }
+
+            });
+
+            panel1.setBounds(0, 0, 900, 800);
+            add(panel1);
+            display_trips();
+            b1.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent ae) {
+                    int dialog = JOptionPane.showConfirmDialog(null, "Are you sure to delete the trip?", "", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+                    if (dialog == JOptionPane.YES_OPTION) {
+                        int row = table.getSelectedRow();
+                        if (row != -1) {
+                            try {
+                                concted();
+                                String b = (table.getModel().getValueAt(row, 0).toString());
+                                query = "delete from trip_info where id=" + b;
+                                PreparedStatement pstatment = connection.prepareStatement(query);
+                                pstatment.executeUpdate();
+                                model.setRowCount(0);
+                                display_trips();
+
+                            } catch (SQLException sqlEx) {
+                                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "please select row");
+                        }
+
+                    }
+                }
+            });
+
+        }
+
+        class Panel1 extends JPanel {
+
+            Panel1() {
+                setLayout(null);
+
+            }
+
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon image1 = new ImageIcon(getClass().getResource("background.jpg"));
+                Image a = image1.getImage();
+                g.drawImage(a, 0, 0, this.getSize().width, this.getSize().height, this);
+
+            }
+        }
+
+        public ArrayList<Cust> mytrip() {
+            ArrayList<Cust> mytrip = new ArrayList<>();
+            try {
+                concted();
+                String name = ja.t.getText();
+
+                String query = "select * from trip_info where Email=?;";
+                PreparedStatement preparedStmt = connection.prepareStatement(query);
+                preparedStmt.setString(1, name);
+                ruseltset = preparedStmt.executeQuery();
+                ResultSetMetaData t = ruseltset.getMetaData();
+
+                Cust cust;
+                while (ruseltset.next()) {
+                    cust = new Cust(ruseltset.getInt("id"), ruseltset.getString("Email"), ruseltset.getString("cabin"), ruseltset.getString("hotel"), ruseltset.getString("place"), ruseltset.getString("guide"), ruseltset.getString("date"), ruseltset.getString("country"));
+                    mytrip.add(cust);
+
+                }
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(this, sqlEx.getMessage());
+            }
+            return mytrip;
+        }
+
+        public void display_trips() {
+            ArrayList<Cust> list = mytrip();
+
+            Object[] row = new Object[7];
+
+            for (int i = 0; i < list.size(); i++) {
+
+                if (list.get(i).getCountry().equals("Jeddah")) {
+                    row[0] = list.get(i).getId();
+                    row[1] = list.get(i).getCabin();
+                    row[2] = list.get(i).getHotel();
+                    row[3] = list.get(i).getPalse();
+                    row[4] = list.get(i).getGuide();
+                    row[5] = list.get(i).getDate();
+                    row[6] = list.get(i).getCountry();
+
+                    model.addRow(row);
+                }
+
+            }
+        }
+
+        public void concted() {
+
+            try {
+                String URL = "jdbc:mysql://localhost:3306/trips";
+                String usernsme = "root";
+                String pass = "1234";
+                String query = "select * from trip_info";
+                connection = DriverManager.getConnection(URL, usernsme, pass);
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                ruseltset = statement.executeQuery(query);
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, e.getMessage());
+            }
+        }
+    }
+
+    class panelf extends JPanel {
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.setColor(new Color(0, 144, 158));
+            g.setFont(new Font("Monospaced", Font.BOLD, 24));
+            g.drawString("UPDATE", 190, 30);
+            g.drawString("------>", 190, 60);
+
+            g.setColor(Color.black);
+            g.setFont(new Font("Monospaced", Font.LAYOUT_NO_START_CONTEXT, 50));
+            g.drawString("Jeddah ", 0, 160);
+
+        }
+
+    }
+
+    class panelf1 extends JPanel {
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.setColor(new Color(0, 144, 158));
+            g.setFont(new Font("Monospaced", Font.BOLD, 24));
+            g.drawString("UPDATE", 190, 30);
+            g.drawString("------>", 190, 60);
+
+            g.setColor(Color.black);
+            g.setFont(new Font("Monospaced", Font.LAYOUT_NO_START_CONTEXT, 50));
+            g.drawString("Dammam", 0, 160);
+
+        }
+
+    }
+}
