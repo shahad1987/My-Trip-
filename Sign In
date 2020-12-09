@@ -1,0 +1,194 @@
+package project;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.regex.Pattern;
+import javax.swing.*;
+
+public class SignIn extends JFrame implements ActionListener{
+    
+     Connection connection = null;
+    Statement statement = null;
+    ResultSet resultSet = null;
+    String query;
+    
+ Container container=getContentPane();
+ 
+  JLabel sign = new  JLabel("SIGN IN");
+    JLabel emailLabel=new JLabel("EMAIL ");
+    JLabel passwordLabel=new JLabel("PASSWORD");
+    JTextField emailTextField=new JTextField();
+    JPasswordField passwordField=new JPasswordField();
+    JButton loginButton=new JButton("LOGIN");
+    JButton resetButton=new JButton("RESET");
+    JCheckBox showPassword=new JCheckBox("Show Password"); 
+    JLabel label = new JLabel("Don't have an account?");
+    JLabel L = new JLabel("Click Here");
+    
+SignIn(){
+    
+   super("Log in page");
+   setLayout(null);
+   Font font1 = new Font("Serif", Font.BOLD, 25);
+   Font font2 = new Font("Serif", Font.BOLD, 40);
+   Font font3 = new Font("Serif", Font.BOLD, 15);
+   ImageIcon img = new ImageIcon();
+setContentPane(new JLabel(new ImageIcon(getClass().getResource("background.jpg"))));
+
+     sign.setBounds(400,100,250,100);
+      emailLabel.setBounds(180,200,200,30);
+       passwordLabel.setBounds(180,280,200,30);
+       emailTextField.setBounds(350,200,200,30);
+       passwordField.setBounds(350,280,200,30);
+       showPassword.setBounds(350,310,200,30);
+       loginButton.setBounds(300,450,100,30);
+       loginButton.setFont(font3);
+       resetButton.setFont(font3);
+       resetButton.setBounds(450,450,100,30);
+       label.setBounds(200, 550, 250, 150);
+       resetButton.setBackground(Color.white);
+       loginButton.setBackground(Color.white);
+       L.setBounds(480,550,200,150);
+       emailLabel.setFont(font1);
+       emailLabel.setForeground(Color.white);
+       passwordLabel.setFont(font1);
+       passwordLabel.setForeground(Color.WHITE);
+       sign.setFont(font2);
+       sign.setForeground(Color.white);
+       showPassword.setFont(font1);
+       showPassword.setForeground(Color.GRAY);
+       label.setFont(font1);
+       label.setForeground(Color.lightGray);
+       L.setFont(font1);
+       L.setForeground(Color.gray);
+       add(sign);
+       add(emailLabel);
+       add(passwordLabel);
+       add(emailTextField);
+       add(passwordField);
+       add(showPassword);
+       add(loginButton);
+       add(resetButton);
+       add(label);
+       add(L);
+       
+loginButton.addActionListener(this);
+resetButton.addActionListener(this);
+showPassword.addActionListener(this);
+MyMouseHandler h = new MyMouseHandler();
+L.addMouseListener(h);
+    }
+// this action to open the Sign Up Interface .
+ private class MyMouseHandler extends MouseAdapter {
+  @Override
+  public void mouseClicked(MouseEvent evt) {
+            JLabel source = (JLabel) evt.getSource();
+                if (L == source) {
+                 dispose(); // releases all of the screen resources used by this window  
+                SignUp sign = new SignUp();
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                sign.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                sign.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                sign.setSize(900, 800);
+                sign.setVisible(true);
+                } 
+            }}
+ @Override
+ //this action to sign in and open the next interface .
+ 
+ public void actionPerformed(ActionEvent e) {
+ if (e.getSource() == loginButton) {
+      PreparedStatement ps;
+        ResultSet rs;
+        String email = emailTextField.getText();
+        String pass = String.valueOf(passwordField.getPassword());
+        if (EmialCheck(email)==false){ 
+           JOptionPane.showMessageDialog(null, "please Enter the correct Email ", "Error", JOptionPane.ERROR_MESSAGE);
+             emailTextField.setText("");
+       }
+        else{
+        String query = "SELECT * FROM `customer` WHERE `Email` =? AND `Password` =?";
+        try {
+            ps = SignIn.getConnection().prepareStatement(query);
+            
+            ps.setString(1, email);
+            ps.setString(2, pass);
+            
+            rs = ps.executeQuery();
+            
+            if(rs.next())
+            {
+                JOptionPane.showMessageDialog(null, "Login is Successfully ", "Login Success", 2);
+                dispose();
+                    Frame1 home = new Frame1();
+                    home.email(email);
+                   Toolkit kit = Toolkit.getDefaultToolkit();
+                    home.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                    home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    home.setSize(900, 800);
+                    home.setVisible(true);
+            }
+            else{
+                    JOptionPane.showMessageDialog(null, "Incorrect Username Or Password", "Login Failed", 2);
+                }
+            
+        } catch (SQLException ex) {
+           System.out.println(ex.getMessage());
+        }
+        }}
+        //Coding Part of RESET button
+        if (e.getSource() == resetButton) {
+            emailTextField.setText("");
+            passwordField.setText("");
+        }
+       //this for show the passowrd .
+        if (e.getSource() == showPassword) {
+            if (showPassword.isSelected()) {
+                passwordField.setEchoChar((char) 0);
+            } else {
+                passwordField.setEchoChar('*');
+            }
+ 
+  
+        }
+ 
+ }
+  public static Connection getConnection(){
+     
+        Connection con = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/trips", "root", "1234");
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        return con;
+    }
+  // to check for email 
+ public static boolean EmialCheck(String email) { 
+        String E = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@"+"(?:[a-zA-Z0-9-]+\\.)+[a-z"+"A-Z]{2,7}$";                
+     Pattern p = Pattern.compile(E); 
+        if (email == null) 
+            return false; 
+        return p.matcher(email).matches(); 
+    }
+ 
+public static void main(String[] args) {
+                SignIn log = new SignIn();
+             Toolkit kit = Toolkit.getDefaultToolkit();
+             log.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                log.setSize(900,800);
+                log.setVisible(true);   
+    }
+    
+}
