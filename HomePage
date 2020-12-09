@@ -1,0 +1,214 @@
+package project;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
+
+public class HomePage {
+
+    public static void main(String[] args) {
+        Frame1 a = new Frame1();
+        Toolkit kit = Toolkit.getDefaultToolkit();
+        a.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+        a.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        a.setSize(900, 800);
+        a.setVisible(true);
+    }
+
+}
+
+class Frame1 extends JFrame {
+
+    JLabel Label2, Label3, Label4, Label5, Label6;
+    Panel1 panel1 = new Panel1();
+    JPanel panel2 = new JPanel();
+    JPanel panel3 = new JPanel();
+    public static JTextField t = new JTextField();
+
+    Frame1() {
+        setLayout(null);
+        ImageIcon menu = new ImageIcon(getClass().getResource("menu.png"));
+        Image menus = menu.getImage();
+        Image menua = menus.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        menu = new ImageIcon(menua);
+
+        ImageIcon menu1 = new ImageIcon(getClass().getResource("places.png"));
+        Image menus1 = menu1.getImage();
+        Image menua1 = menus1.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        menu1 = new ImageIcon(menua1);
+
+        JMenu Menu = new JMenu();
+        JMenu Menu1 = new JMenu();
+        Menu.setIcon(menu);
+        Menu1.setIcon(menu1);
+        Menu.setMnemonic('-');
+        Menu1.setMnemonic('P');
+        JMenuItem Item1 = new JMenuItem("Home Page");
+        JMenuItem Item2 = new JMenuItem("Logout");
+        JMenuItem Item3 = new JMenuItem("About Us");
+        JMenuItem Item = new JMenuItem("Places");
+        Item1.setBackground(Color.WHITE);
+        Item2.setBackground(Color.WHITE);
+        Item3.setBackground(Color.WHITE);
+        Item.setBackground(Color.WHITE);
+        Item1.setMnemonic('h');
+        Item2.setMnemonic('l');
+        Item3.setMnemonic('c');
+        Item.setMnemonic('p');
+        Menu.add(Item1);
+        Menu.add(Item2);
+        Menu.add(Item3);
+        Menu1.add(Item);
+        JMenuBar bar = new JMenuBar();
+        setJMenuBar(bar);
+        bar.add(Menu);
+        bar.add(Menu1);
+        add(bar);
+        t.setBounds(680, 23, 200, 26);
+        t.setEditable(false);
+        add(t);
+        ImageIcon image3 = new ImageIcon(getClass().getResource("lan.gif"));
+        Image image3s = image3.getImage();
+        Image image3a = image3s.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+        image3 = new ImageIcon(image3a);
+        Label2 = new JLabel(image3);
+        Label2.setHorizontalTextPosition(SwingConstants.CENTER);
+        Label2.setVerticalTextPosition(SwingConstants.BOTTOM);
+
+        Label2.setText("Booked trips");
+        Label2.setBounds(0, 0, 80, 80);
+        add(Label2);
+        Label2.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                BookedTrips a = new BookedTrips();
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                a.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                a.setSize(900, 800);
+                a.setVisible(true);
+            }
+        });
+        Item.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                Places p = new Places();
+                p.setTitle("Places");
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                p.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                p.setSize(900, 750);
+                p.setVisible(true);
+            }
+        });
+        Item2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                dispose();
+                Frame2 logout = new Frame2();
+                logout.setTitle("Log Out");
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                logout.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                logout.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                logout.setSize(700, 650);
+                logout.setVisible(true);
+            }
+        });
+        Item3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                setVisible(false);
+                dispose();
+                AboutUs c = new AboutUs();
+                c.em(t.getText());
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                c.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                c.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                c.setSize(1200, 800);
+                c.setTitle("About Us");
+                c.setVisible(true);
+            }
+        });
+        ImageIcon image4 = new ImageIcon(getClass().getResource("jeddah.gif"));
+        Image image4s = image4.getImage();
+        Image image4a = image4s.getScaledInstance(400, 200, Image.SCALE_FAST);
+        image4 = new ImageIcon(image4a);
+        Label3 = new JLabel(image4);
+        panel2.setLayout(null);
+        Label3.setBounds(0, 0, 400, 200);
+        panel2.setBounds(240, 100, 400, 230);
+        panel2.setBackground(new Color(100, 100, 60, 50));
+        Label4 = new JLabel("Jeddah");
+        Label4.setBounds(180, 188, 400, 50);
+        panel2.add(Label4);
+
+        panel2.add(Label3);
+        add(panel2);
+        Label4.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                setVisible(false);
+                dispose();
+                jeddah r = new jeddah();
+                r.em(t.getText());
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                r.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                r.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                r.setSize(900, 800);
+                r.setTitle("Jeddah");
+                r.setVisible(true);
+
+            }
+        });
+
+        ImageIcon image5 = new ImageIcon(getClass().getResource("Dammam.jpeg"));
+        Image image5s = image5.getImage();
+        Image image5a = image5s.getScaledInstance(400, 200, Image.SCALE_DEFAULT);
+        image5 = new ImageIcon(image5a);
+        Label5 = new JLabel(image5);
+        panel3.setLayout(null);
+        Label5.setBounds(0, 0, 400, 200);
+        panel3.setBounds(240, 370, 400, 230);
+        panel3.setBackground(new Color(100, 100, 60, 50));
+
+        Label6 = new JLabel("Dammam");
+        Label6.setBounds(180, 188, 400, 50);
+        panel3.add(Label6);
+
+        panel3.add(Label5);
+        add(panel3);
+        Label6.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                setVisible(false);
+                dispose();
+                dammam r = new dammam();
+                r.em(t.getText());
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                r.setLocation(kit.getScreenSize().width / 5, kit.getScreenSize().height / 8);
+                r.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                r.setSize(900, 800);
+                r.setTitle("Dammam");
+                r.setVisible(true);
+            }
+        });
+
+        panel1.setBounds(0, 0, 900, 800);
+        add(panel1);
+    }
+
+    class Panel1 extends JPanel {
+
+        Panel1() {
+            setLayout(null);
+
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            ImageIcon image1 = new ImageIcon(getClass().getResource("background.jpg"));
+            Image a = image1.getImage();
+            g.drawImage(a, 0, 0, this.getSize().width, this.getSize().height, this);
+
+        }
+    }
+
+    public void email(String e) {
+        t.setText(e);
+    }
+}
