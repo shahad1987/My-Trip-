@@ -1,0 +1,253 @@
+package project;
+
+import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.regex.Pattern;
+import javax.swing.*;
+
+public class SignUp extends JFrame implements ActionListener{
+
+ Container container=getContentPane();
+  JLabel sign = new  JLabel("SIGN UP");
+    JLabel userLabel=new JLabel("NAME");
+    JLabel passwordLabel=new JLabel("PASSWORD");
+    JLabel emailLabel=new JLabel("EMAIL");
+    JLabel confirmPass = new JLabel("Confirm Password");
+    JLabel Phone = new JLabel("Phone Number ");
+    JTextField userTextField=new JTextField();
+    JPasswordField passwordField=new JPasswordField();
+    JTextField emailTextField=new JTextField();
+     JPasswordField  confirmpassText=new  JPasswordField ();
+    JTextField phoneText=new JTextField();
+     JButton logButton=new JButton("Sign Up");
+     
+SignUp(){
+    
+   super("SIGN UP");
+   setLayout(null);
+
+   Font font1 = new Font("Serif", Font.BOLD, 25);
+   Font font2 = new Font("Serif", Font.BOLD, 40);
+   Font font3 = new Font("Serif", Font.BOLD, 15);
+   
+setContentPane(new JLabel(new ImageIcon(getClass().getResource("background.jpg"))));
+
+     passwordField.setEchoChar('♥');
+     confirmpassText.setEchoChar('♥');
+       sign.setBounds(400,100,250,100);
+       userLabel.setBounds(180,200,200,30);
+       emailLabel.setBounds(180,260,200,30);
+       Phone.setBounds(180,320,200,30);
+       passwordLabel.setBounds(180, 380, 200, 30);
+       confirmPass.setBounds(180, 430, 250, 30);
+       
+       userTextField.setBounds(430,200,250,30);
+       emailTextField.setBounds(430,260,250,30);
+       phoneText.setBounds(430,320,250,30);
+       passwordField.setBounds(430,380,250,30);
+       confirmpassText.setBounds(430,430,250,30);
+       logButton.setBounds(390,520,150,40);
+       
+       logButton.setFont(font1);
+       logButton.setForeground(Color.gray);
+       logButton.setBackground(Color.white);
+       
+       userLabel.setFont(font1);
+       userLabel.setForeground(Color.white);
+       
+       emailLabel.setFont(font1);
+       emailLabel.setForeground(Color.white);
+       
+       Phone.setFont(font1);
+       Phone.setForeground(Color.white);
+       
+       passwordLabel.setFont(font1);
+       passwordLabel.setForeground(Color.WHITE);
+       
+       confirmPass.setFont(font1);
+       confirmPass.setForeground(Color.WHITE);
+       
+       sign.setFont(font2);
+       sign.setForeground(Color.white);
+       
+       add(sign);
+       add(userLabel);
+       add(emailLabel);
+       add(Phone);
+       add(passwordLabel);
+       add(confirmPass);
+       
+       add(userTextField);
+       add(emailTextField);
+       add(phoneText);
+       add(passwordField);
+       add(confirmpassText);
+       add(logButton);
+logButton.addActionListener(this);
+}
+// to chech from Email.
+public static boolean EmialCheck(String email) { 
+        String E = "^[a-zA-Z0-9_+&*-]+(?:\\."+"[a-zA-Z0-9_+&*-]+)*@"+"(?:[a-zA-Z0-9-]+\\.)+[a-z"+"A-Z]{2,7}$";                
+     Pattern p = Pattern.compile(E); 
+        if (email == null) 
+            return false; 
+        return p.matcher(email).matches(); 
+    }
+// to check if number phone is a number or not.
+public static boolean isNum(String phone){
+    if (phone == null) {
+        return false;
+    }
+    try {
+        int n = Integer.parseInt(phone);
+    } catch (NumberFormatException e) {
+        return false;
+    }
+    return true;
+}
+
+public static void main(String[] args) {
+ SignUp log = new SignUp();
+ Toolkit kit = Toolkit.getDefaultToolkit();
+          log.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                log.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                log.setSize(900,800);
+                log.setVisible(true);   
+    }
+
+// this action to register and open the next Interface.
+public void actionPerformed(ActionEvent event) {
+     
+       String name = userTextField.getText();
+        String email = emailTextField.getText();
+        String phone = phoneText.getText();
+        String pass = String.valueOf(passwordField.getPassword());
+        String re_pass = String.valueOf(confirmpassText.getPassword());
+        if(name.isEmpty()||phone.isEmpty()||emailTextField.getText().isEmpty()||pass.isEmpty()||re_pass.isEmpty()){
+    JOptionPane.showMessageDialog(null, "please fill all information ", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        else if (EmialCheck(email)==false){ 
+           JOptionPane.showMessageDialog(null, "please Enter the correct Email ", "Error", JOptionPane.ERROR_MESSAGE);
+             emailTextField.setText("");
+       }
+        
+        else if (isNum(phone)==false){ 
+          JOptionPane.showMessageDialog(null, "is not number , please enter number phone", "Error", JOptionPane.ERROR_MESSAGE);  
+        phoneText.setText("");
+        }
+        
+        else if(checkemail(email)==true)
+        {
+            JOptionPane.showMessageDialog(null, "This Email Already Exist");
+            emailTextField.setText("");
+        }
+        
+        else if(checkPhone(phone)==true)
+        {
+            JOptionPane.showMessageDialog(null, "This Phone Number Already Exist");
+            phoneText.setText("");
+        }
+        
+           else if(!pass.equals(re_pass))
+        {
+            JOptionPane.showMessageDialog(null, "Retype The Password Again", "Error", JOptionPane.ERROR_MESSAGE);
+                 passwordField.setText("");
+                 confirmpassText.setText("");
+        }
+           
+        else{ 
+               
+        PreparedStatement ps;
+        String query = "INSERT INTO `customer`(`CUS_name`, `Email`, `Phone_num`, `Password`) VALUES (?,?,?,?)";
+        
+        try {
+            
+            ps = SignUp.getConnection().prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, email);
+            ps.setString(3, phone);
+            ps.setString(4, pass);
+            if(ps.executeUpdate() > 0){
+                JOptionPane.showMessageDialog(null, "Resgister Successfully");
+                 dispose(); // releases all of the screen resources used by this window      
+                Frame1 home = new Frame1();
+                home.email(email);
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                home.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                home.setSize(900, 800);
+                home.setVisible(true);
+            }
+         
+        } catch (SQLException ex) {
+         System.out.println(ex.getMessage());
+        }
+        }             
+}
+// to connect with database.
+  public static Connection getConnection(){
+     
+        Connection con = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/trips", "root", "1234");
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        
+        return con;
+    }
+  // to check if Email registered in database or not . 
+      public boolean checkemail(String email)
+    {
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean check = false;
+        String query = "SELECT * FROM `customer` WHERE `Email` =? ";
+        
+        try {
+            ps = SignUp.getConnection().prepareStatement(query);
+            ps.setString(1, email);
+            
+            rs = ps.executeQuery();
+            
+            if(rs.next())
+            {
+                check = true;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+         return check;
+    } 
+      // to check if number phone registered in database or not . 
+     public boolean checkPhone(String phone)
+    {
+        PreparedStatement ps;
+        ResultSet rs;
+        boolean checkphone= false;
+        String query = "SELECT * FROM `customer` WHERE `Phone_num` =? ";
+        
+        try {
+            ps = SignUp.getConnection().prepareStatement(query);
+            ps.setString(1, phone);
+            
+            rs = ps.executeQuery();
+            
+            if(rs.next())
+            {
+                checkphone = true;
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+         return checkphone;
+    } 
+}
