@@ -1,0 +1,466 @@
+package project;
+import java.awt.*;
+import java.sql.*;
+import java.util.Date;
+import javax.swing.*;
+public class dammam extends javax.swing.JFrame {
+Connection connection = null;
+Statement statement = null;
+ResultSet resultSet = null;
+String query;
+public dammam() {
+    initComponents();
+    jComboBox1.setBackground(Color.WHITE);
+    jComboBox2.setBackground(Color.WHITE);
+    jComboBox3.setBackground(Color.WHITE);
+    jComboBox4.setBackground(Color.WHITE);
+    DoneButton.setBackground(Color.WHITE);
+    doConnect();
+    String email = " ";
+   String e = em(email);
+  try {
+                String query = "select * from Hotel";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                resultSet = statement.executeQuery(query);
+                resultSet.absolute(5);
+                while (resultSet.next()) {
+                    jComboBox2.addItem(resultSet.getString("Hotel"));
+                }
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+try {
+                String query = "select * from Place";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                resultSet = statement.executeQuery(query);
+                for (int i = 1; i <= 4; i++) {
+                    resultSet.next();
+
+                    jComboBox3.addItem(resultSet.getString("Place"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+  try {
+                String query = "select * from tourist_guide";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                resultSet = statement.executeQuery(query);
+                resultSet.absolute(4);
+
+                while (resultSet.next()) {
+
+                    jComboBox4.addItem(resultSet.getString("Guide_name"));
+                }
+
+            } catch (SQLException sqlEx) {
+                JOptionPane.showMessageDialog(null, sqlEx.getMessage());
+
+            }
+}
+public void doConnect( ) {
+try {
+    String URL = "jdbc:mysql://localhost:3306/trips";
+    String username = "root";
+    String password = "1234";
+    query = "select * from trip_info";
+
+    connection = DriverManager.getConnection(URL, username, password);
+    statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    resultSet = statement.executeQuery(query); } 
+catch (SQLException ex) {
+    JOptionPane.showMessageDialog(this, ex.getMessage());
+}}
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenu1 = new javax.swing.JMenu();
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jPanel2 = new javax.swing.JPanel(){
+            public void paintComponent(Graphics g) {
+                ImageIcon img = new ImageIcon(getClass().getResource("background.jpg"));
+                Image i=img.getImage();
+                g.drawImage(i, 0, 0, this.getSize().width, this.getSize().height, this);}
+        }
+        ;
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        DoneButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox();
+        jComboBox2 = new javax.swing.JComboBox();
+        jComboBox1 = new javax.swing.JComboBox();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jComboBox4 = new javax.swing.JComboBox();
+        PriceButton = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+
+        jMenu1.setText("jMenu1");
+
+        jMenuItem2.setText("jMenuItem2");
+
+        jMenuItem3.setText("jMenuItem3");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Dammam");
+        setIconImage(getIconImage());
+
+        jLabel1.setFont(new java.awt.Font("Serif", 1, 30)); // NOI18N
+        jLabel1.setText("Dammam");
+
+        jLabel2.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel2.setText("Select Date:");
+
+        DoneButton.setBackground(new java.awt.Color(255, 255, 255));
+        DoneButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
+        DoneButton.setText("Done");
+        DoneButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DoneButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel3.setText("Cabin:");
+
+        jLabel6.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel6.setText("Tourist Guides:");
+
+        jComboBox3.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
+
+        jComboBox2.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
+
+        jComboBox1.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Economic", "Tourist", "Business", "First Class" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel5.setText("Tourist Places:");
+
+        jLabel4.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel4.setText("Hotels:");
+
+        jComboBox4.setFont(new java.awt.Font("Serif", 0, 18)); // NOI18N
+
+        PriceButton.setBackground(new java.awt.Color(255, 255, 255));
+        PriceButton.setFont(new java.awt.Font("Serif", 1, 18)); // NOI18N
+        PriceButton.setText("Check Price");
+        PriceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PriceButtonActionPerformed(evt);
+            }
+        });
+
+        jTextField1.setEditable(false);
+
+        jLabel7.setFont(new java.awt.Font("Serif", 0, 24)); // NOI18N
+        jLabel7.setText("Email");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(353, 353, 353)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(271, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel6)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel3))
+                                    .addGap(32, 32, 32))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jLabel7))
+                        .addGap(115, 115, 115)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jComboBox1, 0, 161, Short.MAX_VALUE)
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(130, 130, 130))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(PriceButton)
+                        .addGap(29, 29, 29)
+                        .addComponent(DoneButton, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(433, 433, 433))))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(jLabel1)
+                .addGap(36, 36, 36)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(62, 62, 62)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(DoneButton)
+                    .addComponent(PriceButton))
+                .addGap(74, 74, 74))
+        );
+
+        jMenuBar1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/project/menu.png"))); // NOI18N
+
+        jMenuItem1.setMnemonic('H');
+        jMenuItem1.setText("Home Page");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem1);
+
+        jMenuItem4.setMnemonic('L');
+        jMenuItem4.setText("Logout ");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem4);
+
+        jMenuItem5.setMnemonic('A');
+        jMenuItem5.setText("About Us");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem5);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void DoneButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DoneButtonActionPerformed
+Date day = jDateChooser1.getDate();
+String cabin = (String) jComboBox1.getItemAt(jComboBox1.getSelectedIndex());
+String hotel = (String) jComboBox2.getItemAt(jComboBox2.getSelectedIndex());
+String place = (String) jComboBox3.getItemAt(jComboBox3.getSelectedIndex());
+String guide = (String) jComboBox4.getItemAt(jComboBox4.getSelectedIndex());
+String d= String.valueOf(day);
+
+try {
+    String query = "select * from trip_info";
+                statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+                resultSet = statement.executeQuery(query);
+    if(jDateChooser1.getCalendar().equals("") ) {
+      throw new Exception();}
+    resultSet.moveToInsertRow(); 
+    resultSet.updateString("Email", jTextField1.getText());
+    resultSet.updateString("Cabin", cabin);
+    resultSet.updateString("Hotel", hotel);
+    resultSet.updateString("Guide", guide);
+    resultSet.updateString("Place", place);
+    resultSet.updateString("Date", d);
+    resultSet.updateString("Country", "Dammam");
+    resultSet.insertRow();
+    resultSet.close();
+    statement.close();
+    statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    resultSet = statement.executeQuery(query);
+    resultSet.next();
+    JOptionPane.showMessageDialog(null,"Do you want to complete the order? "+jDateChooser1.getDate()+" ,Correct Date?", "", JOptionPane.INFORMATION_MESSAGE);
+    setVisible(false);
+    dispose();
+   payment p= new payment();
+    p.email(jTextField1.getText());
+    Toolkit kit = Toolkit.getDefaultToolkit();
+                p.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                p.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                p.setSize(900, 800);
+    p.setTitle("Payment");
+    p.setVisible(true);} 
+catch (SQLException sqlEx){
+    JOptionPane.showMessageDialog(this, sqlEx.getMessage());} 
+catch (Exception ex) {    
+    JOptionPane.showMessageDialog(null,"Please select all required fields to continue", "Error", JOptionPane.INFORMATION_MESSAGE);}    
+    }//GEN-LAST:event_DoneButtonActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    setVisible(false);
+    dispose();
+    AboutUs c=new AboutUs();
+    Toolkit kit = Toolkit.getDefaultToolkit();
+    c.em(jTextField1.getText());
+                c.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                c.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                c.setSize(1200, 800);
+    c.setTitle("About Us");
+    c.setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void PriceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PriceButtonActionPerformed
+    double price=0;
+    String h=jComboBox2.getSelectedItem().toString();
+    String p=jComboBox3.getSelectedItem().toString();
+    //price hotel
+    if(h.equals("Sheraton Dammam Hotel")||h.equals("Braira Dammam Hotel"))
+        price=price+1150;
+    else if(h.equals("Novotel Dammam"))
+        price=price+950;
+    else if(h.equals("Park Inn by Radisson Dammam"))
+        price=price+1050;
+    //price place
+    if(p.equals("waterfront")||p.equals("Splash Island"))
+        price=price+200;
+    else if(p.equals("Dammam Corniche"))
+        price=price+10;
+    else if(p.equals("Cobra Entertainment"))
+        price=price+150;
+    JOptionPane.showMessageDialog(null,"Price= "+price, "price", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_PriceButtonActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        dispose();    
+                Frame1 home = new Frame1();
+                 home.email(jTextField1.getText());
+                home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                home.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                home.setTitle("Home Page");
+                home.setSize(900, 800);
+                home.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        dispose();    
+                Frame2 logout = new Frame2();
+                logout.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                Toolkit kit = Toolkit.getDefaultToolkit();
+                logout.setLocation(kit.getScreenSize().width /5, kit.getScreenSize().height /8);
+                logout.setTitle("Log Out");
+                logout.setSize(700, 600);
+                logout.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    public static void main(String args[]) {
+
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(dammam.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(dammam.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(dammam.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(dammam.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new dammam().setVisible(true);
+            }
+        });}
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton DoneButton;
+    private javax.swing.JButton PriceButton;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
+    private javax.swing.JComboBox jComboBox3;
+    private javax.swing.JComboBox jComboBox4;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JPanel jPanel2;
+    public javax.swing.JTextField jTextField1;
+    // End of variables declaration//GEN-END:variables
+public String  em(String e){
+   String em =e ;
+  jTextField1.setText(em);
+  return em;
+}}
