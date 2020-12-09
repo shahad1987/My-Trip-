@@ -1,12 +1,17 @@
 package project;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
 public class SplachScreen extends JWindow{
+
   static JProgressBar progressBar = new JProgressBar();
   static int count = 1, time = 10, bar = 100;
   static Timer timer;
+  
 SplachScreen(){
+
     Container container = getContentPane();
     JPanel panel = new JPanel();
     container.add(panel, BorderLayout.CENTER);
@@ -24,9 +29,10 @@ SplachScreen(){
     setVisible(true);
     start();
   }
+ 
 ActionListener al = new ActionListener() {
     @Override
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
+ public void actionPerformed(java.awt.event.ActionEvent evt) {
       progressBar.setValue(count);
       if (bar == count) {
         timer.stop();
@@ -36,10 +42,12 @@ ActionListener al = new ActionListener() {
       count++;
     }
   };
+  // to start the timer .
   private void start() {
     timer = new Timer(time, al);
     timer.start();
   }
+  // to open the next Frame.
   private void Show() {
       Home home = new Home();
       Toolkit kit = Toolkit.getDefaultToolkit();
@@ -48,6 +56,7 @@ ActionListener al = new ActionListener() {
       home.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       home.setVisible(true);
   }
+  
   public static void main(String[] args) {
     SplachScreen splashScreen = new SplachScreen();
   }
